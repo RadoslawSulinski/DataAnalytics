@@ -43,3 +43,13 @@ for sample in samples.values():
     plt.axvline(theta.mean(), color='y')
     plt.show()
 
+# Exercise 3
+models = {i: CmdStanModel(stan_file=f'code_{i}.stan') for i in (4, 5)}
+samples = {i: models[i].sample() for i in models}
+plt.hist(samples[4].stan_variable('theta'))
+plt.title('unconstrained')
+plt.show()
+plt.hist(samples[5].stan_variable('theta'))
+plt.title('constrained')
+plt.show()
+
