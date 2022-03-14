@@ -2,6 +2,7 @@ from cmdstanpy import CmdStanModel
 import matplotlib.pyplot as plt
 import pandas as pd
 from random import shuffle
+import arviz as az
 
 
 F = 8
@@ -53,3 +54,21 @@ plt.hist(samples[5].stan_variable('theta'))
 plt.title('constrained')
 plt.show()
 
+# Exercise 4
+model = CmdStanModel(stan_file='code_6.stan')
+data = {'y_guess': [1],
+        'theta': [(F+L)/2]}
+sample = model.sample(data)
+print(sample.draws_pd()['sigma'])
+
+# Exercise 5
+models = [CmdStanModel(stan_file=f'code_{i}.stan') for i in (7, 8, 9)]
+samples = [model.sample({'N': F}) for model in models]
+az.plot_density(samples)
+plt.show()
+
+# Exercise 6
+model = CmdStanModel(stan_file='code_10.stan')
+mean_y = model.generate_quantities(data={'N': F}, mcmc_sample=samples[0])
+plt.hist(mean_y.stan_variable('mean_y'), bins=20)
+plt.show()
